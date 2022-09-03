@@ -5,13 +5,13 @@ CXXFLAGS  = -std=$(CXXSTD) -fno-rtti -Wno-unused-variable -Wno-unused-but-set-va
 LDFLAGS   =
 LDLIBS    = $(LDFLAGS) -lstdc++ -lpthread -latomic -lm
 
-CPPTEST_SRC := test.cpp features.cpp
+CPPTEST_SRC := test.cpp
 CPPTEST_OBJ := $(CPPTEST_SRC:.cpp=.o)
 
 all: test
 build: all
 
-test.o: test.cpp features.hpp
+test.o: test.cpp
 
 $(CPPTEST_OBJ): Makefile
 

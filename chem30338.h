@@ -1,9 +1,13 @@
 #ifndef CHEM30338_H_INCLUDED
 #define CHEM30338_H_INCLUDED
 
+#include "zsequence.h"
+
 // reference: https://jckantor.github.io/CBE30338/05.04-Controller-Tuning-Rules-in-Frequency-Domain.html
 
 namespace chem30338 {
+
+using zseq::zsequence;
 
 struct pid_params {
     float k_p, tau_i, tau_d;
