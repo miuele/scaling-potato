@@ -1,4 +1,3 @@
-
 使い方
 ```cpp
 #include "chem30338.h"
@@ -25,6 +24,7 @@ int main() {
     }
 }
 ```
+C++14 以上が必要
 
 ## `chem30338.h`
 
@@ -50,14 +50,15 @@ PID制御器
 `pid_params`はこれを使って作成することを推奨
 
 `pid_params_builder::pid_params_builder(p_gain, i_time, d_time)`
+
 `pid_params_builder::pid_params_builder(p_gain, i_gain, d_gain)`
 
 - 比例ゲイン、積分時間、微分時間または比例ゲイン、積分ゲイン、微分ゲインから初期化
-- `alpha`, `beta`, `gamma`のデフォルト値は`1.f`, `1.f`, `1.f`
+- `alpha`, `beta`, `gamma`のデフォルト値は`0.15f`, `1.f`, `1.f`
 
 `pid_params_builder &pid_params_builder::{alpha, beta, gamma, lpf_tau}(float value)`
 - `alpha`, `beta`, `gamma`をそれぞれ設定
-- `lpf_tau`はローパスフィルタの時定数
+- `lpf_tau`は近似微分におけるローパスフィルタの時定数
 
 `pid_params pid_params_builder::into_params() const`
 - `pid_params`を生成する
@@ -66,3 +67,11 @@ PID制御器
 
 ### `template <class T, std::size_t N> class zsequence<T, N>`
 - 時系列データを表す
+- `curr()`によって現在の値、`prev<I>()`によって`I`個前の値を取得 (`prev(i)`はない)
+- `advance(next)`によって次の時刻の値をプッシュ
+- リスト初期化により初期値を設定(`zsequence<float, 2> seq = { 2, 3 };`)
+- N == 2 のとき
+    - 現在と一つ前の値を直接移動させる
+    - `prev()` をもつ (`prev<1>()`と等価)
+- N > 2 のとき
+    - リングバッファによるキュー

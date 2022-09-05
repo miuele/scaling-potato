@@ -14,30 +14,16 @@ struct pid_params {
     float alpha, beta, gamma;
 };
 
-struct p_gain {
-    float value;
-};
-
-struct i_gain {
-    float value;
-};
-
-struct d_gain {
-    float value;
-};
-
-struct i_time {
-    float value;
-};
-
-struct d_time {
-    float value;
-};
+struct p_gain { float value; };
+struct i_gain { float value; };
+struct d_gain { float value; };
+struct i_time { float value; };
+struct d_time { float value; };
 
 class pid_params_builder {
 public:
     explicit constexpr pid_params_builder(p_gain p, i_time i, d_time d)
-        : params_{ p.value, i.value, d.value, 0.2f, 1.f, 1.f }
+        : params_{ p.value, i.value, d.value, 0.15f, 1.f, 1.f }
     {
     }
 
