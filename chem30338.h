@@ -37,7 +37,7 @@ struct d_time {
 class pid_params_builder {
 public:
     explicit constexpr pid_params_builder(p_gain p, i_time i, d_time d)
-        : params_{ p.value, i.value, d.value, 1.f, 1.f, 1.f }
+        : params_{ p.value, i.value, d.value, 0.2f, 1.f, 1.f }
     {
     }
 
