@@ -17,7 +17,7 @@ int main() {
                 p_gain{0.8f}, i_time{0.4f}, d_time{0.1f}
             )
             .alpha(0.1).beta(0.5f).gamma(0.5f)
-            .into_params();
+            .params();
 
     pid_bilinear pid(params, h);
 

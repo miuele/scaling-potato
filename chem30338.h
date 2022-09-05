@@ -60,7 +60,7 @@ public:
     }
 
     constexpr operator pid_params() const {
-        return into_params();
+        return params();
     }
 
 private:
