@@ -69,7 +69,7 @@ private:
 
 class pid_bilinear {
 public:
-    explicit pid_bilinear(const pid_params &params, float h)
+    constexpr explicit pid_bilinear(const pid_params &params, float h)
         : i_state_{}, d_state_{}, error_p_{}, error_i_{}, error_d_{}, time_step_(h), params_{params}
     {
     }
