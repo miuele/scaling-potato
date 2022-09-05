@@ -30,7 +30,9 @@ C++14 以上が必要
 
 ### `class pid_bilinear`
 PID制御器
+
 参照: https://jckantor.github.io/CBE30338/05.04-Controller-Tuning-Rules-in-Frequency-Domain.html
+
 - 目標値重み付け、近似微分を用いる
 - 双一次変換による離散化
 - クランピングやワインドアップ防止はされない
@@ -47,21 +49,32 @@ PID制御器
 ### `class pid_params_builder`
 パラメータビルダ
 
-`pid_params`はこれを使って作成することを推奨
+- `pid_params`はこれを使って作成することを推奨
+- `alpha`, `beta`, `gamma` はデフォルト値が存在する
+- デフォルト値は今後変わるかもしれないので、(特にローパスフィルタのパラメータ`alpha` or `lpf_tau`は) それぞれのメンバ関数によって明示的に設定することを推奨
 
-`pid_params_builder::pid_params_builder(p_gain, i_time, d_time)`
+`pid_params_builder::pid_params_builder(p_gain kp, i_gain ki, d_gain kd)`
 
-`pid_params_builder::pid_params_builder(p_gain, i_gain, d_gain)`
+- 比例ゲイン、積分時間、微分時間から初期化
+- `alpha = 0.02f`, `beta = 1.f`, `gamma = 1.f` に設定される
 
-- 比例ゲイン、積分時間、微分時間または比例ゲイン、積分ゲイン、微分ゲインから初期化
-- `alpha`, `beta`, `gamma`のデフォルト値は`0.15f`, `1.f`, `1.f`
+`pid_params_builder::pid_params_builder(p_gain kp, i_time ti, d_time td)`
+
+- 比例ゲイン、積分ゲイン、微分ゲインから初期化
+- `alpha = 0.15f*td`, `beta = 1.f`, `gamma = 1.f` に設定される
 
 `pid_params_builder &pid_params_builder::{alpha, beta, gamma, lpf_tau}(float value)`
+
 - `alpha`, `beta`, `gamma`をそれぞれ設定
 - `lpf_tau`は近似微分におけるローパスフィルタの時定数
 
 `pid_params pid_params_builder::params() const`
 - `pid_params`を生成する
+
+## 参考
+[CBE30338 Controller Tuning Rules in Frequency Domain](https://jckantor.github.io/CBE30338/05.04-Controller-Tuning-Rules-in-Frequency-Domain.html)
+[PID Controller Implementation in Software](https://www.youtube.com/watch?v=zOByx3Izf5U)
+[ディジタル制御システム 第３章 ディジタル PI 制御と離散化](https://nagasaki-u.repo.nii.ac.jp/?action=repository_uri&item_id=3653&file_id=17&file_no=7&nc_session=5722c0uq7djout21sksdqpbpu6)
 
 ## `zsequence.h`
 

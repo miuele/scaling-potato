@@ -10,8 +10,8 @@ namespace chem30338 {
 using zseq::zsequence;
 
 struct pid_params {
-    float k_p, tau_i, tau_d;
-    float alpha, beta, gamma;
+    float k_p, k_i, k_d;
+    float tau, beta, gamma;
 };
 
 struct p_gain { float value; };
@@ -22,13 +22,13 @@ struct d_time { float value; };
 
 class pid_params_builder {
 public:
-    explicit constexpr pid_params_builder(p_gain p, i_time i, d_time d)
-        : params_{ p.value, i.value, d.value, 0.15f, 1.f, 1.f }
+    explicit constexpr pid_params_builder(p_gain kp, i_gain ki, d_gain kd)
+        : params_{ kp.value, ki.value, kd.value, 0.02f, 1.f, 1.f }
     {
     }
 
-    explicit constexpr pid_params_builder(p_gain p, i_gain i, d_gain d)
-        : pid_params_builder(p_gain{p.value}, i_time{p.value/i.value}, d_time{d.value/p.value})
+    explicit constexpr pid_params_builder(p_gain kp, i_time ti, d_time td)
+        : params_{ kp.value, kp.value/ti.value, kp.value*td.value, 0.15f*td.value, 1.f, 1.f }
     {
     }
 
@@ -45,13 +45,14 @@ public:
         return *this;
     }
 
+    // division by zero when k_p == 0
     constexpr pid_params_builder &alpha(float a) {
-        params_.alpha = a;
+        params_.tau = a * params_.k_d / params_.k_p;
         return *this;
     }
 
     constexpr pid_params_builder &lpf_tau(float tau) {
-        params_.alpha = tau/params_.tau_d;
+        params_.tau = tau;
         return *this;
     }
 
@@ -78,9 +79,9 @@ public:
 
         // aliases
         const auto &k_p = params_.k_p;
-        const auto &tau_i = params_.tau_i;
-        const auto &tau_d = params_.tau_d;
-        const auto &alpha = params_.alpha;
+        const auto &k_i = params_.k_i;
+        const auto &k_d = params_.k_d;
+        const auto &tau = params_.tau;
         const auto &beta = params_.beta;
         const auto &gamma = params_.gamma;
 
@@ -90,10 +91,10 @@ public:
         
         const float p = k_p * error_p_.curr();
         const float i =
-            i_state_.prev() + k_p * time_step_* (error_i_.curr() + error_i_.prev()) / (2*tau_i);
+            i_state_.prev() + k_i * time_step_* (error_i_.curr() + error_i_.prev()) / 2;
         const float d =
-            ((2*alpha*tau_d - time_step_) * d_state_.prev() + 2*k_p*tau_d*(error_d_.curr() - error_d_.prev()))
-                / (2*alpha*tau_d + time_step_);
+            ((2*tau - time_step_) * d_state_.prev() + 2*k_d*(error_d_.curr() - error_d_.prev()))
+                / (2*tau + time_step_);
 
         i_state_.advance(i);
         d_state_.advance(d);
