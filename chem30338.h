@@ -55,7 +55,7 @@ public:
         return *this;
     }
 
-    constexpr pid_params into_params() const {
+    constexpr pid_params params() const {
         return params_;
     }
 
