@@ -84,7 +84,7 @@ private:
 class pid_bilinear {
 public:
     explicit pid_bilinear(const pid_params &params, float h)
-        : i_state_{}, d_state_{}, error_p{}, error_i{}, error_d{}, time_step_(h), params_{params}
+        : i_state_{}, d_state_{}, error_p_{}, error_i_{}, error_d_{}, time_step_(h), params_{params}
     {
     }
 
@@ -98,15 +98,15 @@ public:
         const auto &beta = params_.beta;
         const auto &gamma = params_.gamma;
 
-        error_p.advance(beta*sp - meas);
-        error_i.advance(sp - meas);
-        error_d.advance(gamma*sp - meas);
+        error_p_.advance(beta*sp - meas);
+        error_i_.advance(sp - meas);
+        error_d_.advance(gamma*sp - meas);
         
-        const float p = k_p * error_p.curr();
+        const float p = k_p * error_p_.curr();
         const float i =
-            i_state_.prev() + k_p * time_step_* (error_i.curr() + error_i.prev()) / (2*tau_i);
+            i_state_.prev() + k_p * time_step_* (error_i_.curr() + error_i_.prev()) / (2*tau_i);
         const float d =
-            ((2*alpha*tau_d - time_step_) * d_state_.prev() + 2*k_p*tau_d*(error_d.curr() - error_d.prev()))
+            ((2*alpha*tau_d - time_step_) * d_state_.prev() + 2*k_p*tau_d*(error_d_.curr() - error_d_.prev()))
                 / (2*alpha*tau_d + time_step_);
 
         i_state_.advance(i);
@@ -118,9 +118,9 @@ public:
 private:
     zsequence<float, 2> i_state_;
     zsequence<float, 2> d_state_;
-    zsequence<float, 2> error_p;
-    zsequence<float, 2> error_i;
-    zsequence<float, 2> error_d;
+    zsequence<float, 2> error_p_;
+    zsequence<float, 2> error_i_;
+    zsequence<float, 2> error_d_;
     float time_step_;
     pid_params params_;
 };
