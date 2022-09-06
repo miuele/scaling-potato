@@ -91,9 +91,9 @@ public:
         
         const float p = k_p * error_p_.curr();
         const float i =
-            i_state_.prev() + k_i * time_step_* (error_i_.curr() + error_i_.prev()) / 2;
+            i_state_.curr() + k_i * time_step_* (error_i_.curr() + error_i_.prev()) / 2;
         const float d =
-            ((2*tau - time_step_) * d_state_.prev() + 2*k_d*(error_d_.curr() - error_d_.prev()))
+            ((2*tau - time_step_) * d_state_.curr() + 2*k_d*(error_d_.curr() - error_d_.prev()))
                 / (2*tau + time_step_);
 
         i_state_.advance(i);
