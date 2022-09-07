@@ -6,8 +6,8 @@
 
 int main() {
 
-    setvbuf(stdin, NULL, _IOLBF, 0);
-    setvbuf(stdout, NULL, _IOLBF, 0);
+    std::setvbuf(stdin, NULL, _IOLBF, 0);
+    std::setvbuf(stdout, NULL, _IOLBF, 0);
 
     using namespace chem30338;
 
@@ -16,7 +16,7 @@ int main() {
     constexpr pid_params params = pid_params_builder(
                 p_gain{0.8f}, i_time{0.4f}, d_time{0.1f}
             )
-            .alpha(0.1).beta(0.5f).gamma(0.5f)
+            .alpha(0.1f).beta(0.5f).gamma(0.5f)
             .params();
 
     pid_bilinear pid(params, h);
